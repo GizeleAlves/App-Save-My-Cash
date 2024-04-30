@@ -6,9 +6,6 @@ O aplicativo Save My Cash tem como principal objetivo auxiliar as pessoas que po
 
 A nossa principal motivação é contribuir para a redução do número de individados do país devido a dificuldade que os mesmos têm em se organizarem financeiramente. Acreditamos que este problema poderá ser amenizado por meio de uma aplicação prática e fácil de se utilizar, que ajuda o usuário a se organizar financeiramente e cumprir suas metas financeiras. Apresentamos o __Save My Cash!__
 
-
-![Logo](https://raw.githubusercontent.com/GizeleAlves/App-Save-My-Cash/main/logo.png)
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/GizeleAlves/App-Save-My-Cash/main/logo.png" alt="Logo">
 </p>
