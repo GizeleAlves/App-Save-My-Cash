@@ -9,6 +9,9 @@ A nossa principal motivação é contribuir para a redução do número de indiv
 
 ![Logo](https://raw.githubusercontent.com/GizeleAlves/App-Save-My-Cash/main/logo.png)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/GizeleAlves/App-Save-My-Cash/main/logo.png" alt="Logo">
+</p>
 
 ## Fases do Desenvolvimento
 
