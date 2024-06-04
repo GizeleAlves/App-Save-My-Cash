@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'telaCadastro.dart';
+import 'telaInicial.dart';
 
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
@@ -46,7 +47,12 @@ class _TelaLoginState extends State<TelaLogin> {
                 ),
                 Text("Esqueci a senha"),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TelaInicial()),
+                    );
+                  },
                   child: Text(
                     'Entrar',
                     style: TextStyle(fontWeight: FontWeight.bold),

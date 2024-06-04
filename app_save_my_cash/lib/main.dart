@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: TelaInicial(), // Defina TelaLogin como a tela inicial
+      home: TelaLogin(), // Defina TelaLogin como a tela inicial
     );
   }
 }
