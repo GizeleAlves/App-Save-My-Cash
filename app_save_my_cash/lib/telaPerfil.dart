@@ -9,14 +9,14 @@ import 'telaPerfil.dart';
 import 'telaResumo.dart';
 import 'telaSaidas.dart';
 
-class TelaInicial extends StatefulWidget {
-  const TelaInicial({super.key});
+class TelaPerfil extends StatefulWidget {
+  const TelaPerfil({super.key});
 
   @override
-  State<TelaInicial> createState() => _TelaInicialState();
+  State<TelaPerfil> createState() => _TelaPerfilState();
 }
 
-class _TelaInicialState extends State<TelaInicial> {
+class _TelaPerfilState extends State<TelaPerfil> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -151,67 +151,9 @@ class _TelaInicialState extends State<TelaInicial> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaResumo()),
-                    );
-                  },
-                  child: Text(
-                    'Resumo',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(48, 203, 128, 50),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          20.0), // Bordas suavemente arredondadas
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaSaidas()),
-                    );
-                  },
-                  child: Text(
-                    'Saídas',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(48, 203, 128, 50),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.fromLTRB(70, 20, 70, 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          20.0), // Bordas suavemente arredondadas
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaEntradas()),
-                    );},
-                  child: Text(
-                    'Entradas',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(48, 203, 128, 50),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          20.0), // Bordas suavemente arredondadas
-                    ),
-                  ),
-                ),
+                Text("Perfil"),
+                
+                
               ],
             ),
           ),
