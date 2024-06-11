@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'telaLogin.dart';
-import 'telaCadastro.dart';
-import 'telaConfiguracoes.dart';
-import 'telaEntradas.dart';
-import 'telaInicial.dart';
-import 'telaMetas.dart';
-import 'telaPerfil.dart';
-import 'telaResumo.dart';
-import 'telaSaidas.dart';
+
 
 void main() {
   runApp(MyApp());

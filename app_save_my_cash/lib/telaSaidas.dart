@@ -1,13 +1,10 @@
 import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaLogin.dart';
-import 'telaCadastro.dart';
 import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
 import 'telaMetas.dart';
 import 'telaPerfil.dart';
 import 'telaResumo.dart';
-import 'telaSaidas.dart';
 
 class TelaSaidas extends StatefulWidget {
   const TelaSaidas({super.key});

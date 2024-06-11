@@ -1,7 +1,6 @@
 import 'package:app_save_my_cash/telaInicial.dart';
 import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaInicial.dart';
 
 class TelaCadastro extends StatefulWidget {
   const TelaCadastro({super.key});
