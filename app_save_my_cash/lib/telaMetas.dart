@@ -1,13 +1,12 @@
-import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
 import 'telaLogin.dart';
-import 'telaCadastro.dart';
 import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
-import 'telaMetas.dart';
 import 'telaPerfil.dart';
 import 'telaResumo.dart';
 import 'telaSaidas.dart';
+import 'package:intl/intl.dart';
+
 
 class TelaMetas extends StatefulWidget {
   const TelaMetas({super.key});
@@ -17,6 +16,38 @@ class TelaMetas extends StatefulWidget {
 }
 
 class _TelaMetasState extends State<TelaMetas> {
+  DateTime _selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
+  void _incrementDate() {
+    setState(() {
+      _selectedDate = _selectedDate.add(Duration(days: 1));
+    });
+  }
+
+  void _decrementDate() {
+    setState(() {
+      _selectedDate = _selectedDate.subtract(Duration(days: 1));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -136,23 +167,115 @@ class _TelaMetasState extends State<TelaMetas> {
         appBar: AppBar(
           title: Center(
             child: Text(
-              'Página Inicial',
+              'Metas',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
           backgroundColor: Color.fromRGBO(48, 203, 128, 50),
           iconTheme: IconThemeData(color: Colors.white),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                _selectDate(context);
+              },
+              icon: Icon(Icons.calendar_month_outlined),
+            )
+          ],
         ),
         backgroundColor: Color.fromARGB(255, 221, 255, 222),
         body: Padding(
-          padding: EdgeInsets.all(25.0),
+          padding: EdgeInsets.all(16.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text("Metas"),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Dia',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Mês',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Ano',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Período',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
+                    ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: _decrementDate,
+                      icon: Icon(
+                        Icons.arrow_left_outlined,
+                        size: 50,
+                      ),
+                    ),
+                    Text(
+                      '${_formatDate(_selectedDate!)}',
+                      style: TextStyle(fontSize: 22),
+                    ),
+                    IconButton(
+                      onPressed: _incrementDate,
+                      icon: Icon(
+                        Icons.arrow_right_outlined,
+                        size: 50,
+                      ),
+                    ),
+                  ],
+                ),
                 
+
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 10, // Número de cartões que você deseja exibir
+                    itemBuilder: (context, index) {
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        child: ListTile(
+                          leading: Icon(Icons.image_outlined),
+                          title: Text('Título da Meta'),
+                          subtitle: Text('00000,00\nR\$ 0,00'),
+                          trailing: Column(
+                            children: [
+                              Icon(Icons.more_vert_outlined),
+                              Text('0%', style: TextStyle(fontSize: 20),),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                IconButton(
+                      onPressed:(){},
+                      icon: Icon(
+                        Icons.add_box_outlined,
+                        size: 80, color: Color.fromRGBO(48, 203, 128, 50),
+                      ),
+                    ),
                 
               ],
             ),

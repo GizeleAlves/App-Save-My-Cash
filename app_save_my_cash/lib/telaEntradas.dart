@@ -212,7 +212,6 @@ class _TelaEntradasState extends State<TelaEntradas> {
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Entradas"),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -277,7 +276,7 @@ class _TelaEntradasState extends State<TelaEntradas> {
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         child: ListTile(
-                          title: Text('Título da Sáida'),
+                          title: Text('Título da Entrada'),
                           subtitle: Text('Categoria\nR\$ 0,00'),
                           trailing: Icon(Icons.more_vert_outlined),
                         ),
