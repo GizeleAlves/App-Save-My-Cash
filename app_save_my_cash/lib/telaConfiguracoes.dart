@@ -1,8 +1,5 @@
 import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaLogin.dart';
-import 'telaCadastro.dart';
-import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
 import 'telaMetas.dart';
 import 'telaPerfil.dart';
@@ -28,106 +25,128 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
               ListTile(
                 leading: Icon(
                   Icons.bar_chart_outlined,
-                  color: Colors.blue, size: 40,
+                  color: Colors.blue,
+                  size: 40,
                 ),
-                title: Text('Resumo', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Resumo',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Resumo');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaResumo()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaResumo()),
+                  );
                 },
               ),
-
-               ListTile(
+              ListTile(
                 leading: Icon(
                   Icons.money_off_csred_outlined,
-                  color: Colors.red, size: 40,
+                  color: Colors.red,
+                  size: 40,
                 ),
-                title: Text('Saídas', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Saídas',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Saídas');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaSaidas()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaSaidas()),
+                  );
                 },
               ),
-
               ListTile(
                 leading: Icon(
                   Icons.monetization_on_outlined,
-                  color: Colors.green, size: 40,
+                  color: Colors.green,
+                  size: 40,
                 ),
-                title: Text('Entradas', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Entradas',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Entradas');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaEntradas()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaEntradas()),
+                  );
                 },
               ),
-
               ListTile(
                 leading: Icon(
                   Icons.auto_awesome_outlined,
-                  color: Colors.orange, size: 40,
+                  color: Colors.orange,
+                  size: 40,
                 ),
-                title: Text('Metas', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Metas',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Metas');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaMetas()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaMetas()),
+                  );
                 },
               ),
-
               ListTile(
                 leading: Icon(
                   Icons.settings,
-                  color: Colors.grey, size: 40,
+                  color: Colors.grey,
+                  size: 40,
                 ),
-                title: Text('Configurações', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Configurações',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Configurações');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaConfiguracoes()),
-                    );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TelaConfiguracoes()),
+                  );
                 },
               ),
-
               ListTile(
                 leading: Icon(
                   Icons.account_circle_outlined,
-                  color: Colors.purple, size: 40,
+                  color: Colors.purple,
+                  size: 40,
                 ),
-                title: Text('Perfil', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Perfil',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Perfil');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaPerfil()),
-                    );
-                  
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaPerfil()),
+                  );
                 },
               ),
-
               ListTile(
                 leading: Icon(
                   Icons.output_outlined,
-                  color: Colors.black, size: 40,
+                  color: Colors.black,
+                  size: 40,
                 ),
-                title: Text('Sair', style: TextStyle(fontSize: 22),),
+                title: Text(
+                  'Sair',
+                  style: TextStyle(fontSize: 22),
+                ),
                 onTap: () {
                   print('Sair');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaLogin()),
-                    );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaLogin()),
+                  );
                 },
               ),
             ],
@@ -136,7 +155,7 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
         appBar: AppBar(
           title: Center(
             child: Text(
-              'Página Inicial',
+              'Configurações',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -146,14 +165,39 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
         ),
         backgroundColor: Color.fromARGB(255, 221, 255, 222),
         body: Padding(
-          padding: EdgeInsets.all(25.0),
+          padding: EdgeInsets.all(16.0),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Configurações"),
-                
-                
+                ListTile(
+                  title: Text('Modo Escuro'),
+                  trailing: Icon(Icons.mode_night_outlined),
+                  onTap: () {
+                    print('Ainda em desenvolvimento');
+                  },
+                ),
+                ListTile(
+                  title: Text('Adquirir plano premium'),
+                  trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  onTap: () {
+                    print('Ainda em desenvolvimento');
+                  },
+                ),
+                ListTile(
+                  title: Text('Personalizar Página Inicial'),
+                  trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  onTap: () {
+                    print('Ainda em desenvolvimento...');
+                  },
+                ),
+                ListTile(
+                  title: Text('Desativar Notificações'),
+                  trailing: Icon(Icons.volume_off_outlined),
+                  onTap: () {
+                    print("Ainda em desenvolvimento...");
+                  },
+                )
               ],
             ),
           ),

@@ -15,86 +15,101 @@ class _TelaCadastroState extends State<TelaCadastro> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 221, 255, 222),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Image.asset('assets/images/user.png'),
-               
-                TextField(
-                  decoration: InputDecoration(
-                    //labelText: 'Email',
-                    label: Text('Nome'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Image.asset('assets/images/user.png'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text('Nome'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-
-                TextField(
-                  decoration: InputDecoration(
-                    //labelText: 'Email',
-                    label: Text('Email'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text('Email'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Confirmar Senha',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Confirmar Senha',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaInicial()),
-                    );
-                  },
-                  child: Text(
-                    'Cadastrar',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(48, 203, 128, 50),
-                    foregroundColor: Colors.white,
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                ),
-                
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaLogin()),
-                    );                  },
-                  child: Text(
-                    'Já tem uma conta? Entrar.',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TelaInicial()),
+                        );
+                      },
+                      child: Text(
+                        'Cadastrar',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TelaLogin()),
+                      );
+                    },
+                    child: Text(
+                      'Já tem uma conta? Entrar.',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
