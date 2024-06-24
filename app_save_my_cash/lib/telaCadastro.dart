@@ -24,8 +24,16 @@ class _TelaCadastroState extends State<TelaCadastro> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 2.0),
-                    child: Image.asset('assets/images/user.png'),
+                    padding: const EdgeInsets.only(bottom: 2.0, top: 100),
+                    child: Column(
+                      children: [
+                        Image.asset('assets/images/user.png'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                          child: Text('Cadastre-se:', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
+                        ),
+                      ],
+                    ), 
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),

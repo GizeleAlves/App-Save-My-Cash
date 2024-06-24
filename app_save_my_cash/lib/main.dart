@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'telaLogin.dart';
-import 'telaConfiguracoes.dart';
-
 
 void main() {
   runApp(MyApp());

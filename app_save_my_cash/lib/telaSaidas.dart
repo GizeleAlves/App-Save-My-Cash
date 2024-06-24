@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'telaLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +8,6 @@ import 'telaEntradas.dart';
 import 'telaMetas.dart';
 import 'telaPerfil.dart';
 import 'telaResumo.dart';
-
 
 class TelaSaidas extends StatefulWidget {
   const TelaSaidas({super.key});
@@ -46,6 +47,95 @@ class _TelaSaidasState extends State<TelaSaidas> {
     setState(() {
       _selectedDate = _selectedDate.subtract(Duration(days: 1));
     });
+  }
+
+  void _showEditDialog(BuildContext context, {bool isEditing = false}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    decoration: InputDecoration(label: Text('Título da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: DropdownButtonFormField<String>(
+                    //decoration: InputDecoration(labelText: 'Categoria da Saída'),
+                    decoration: InputDecoration(label: Text('Categoria da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    items: <String>[
+                      'Alimentação',
+                      'Aluguel',
+                      'Beleza',
+                      'Conta de água',
+                      'Conta de luz',
+                      'Estudos',
+                      'Internet',
+                      'Saúde',
+                      'Telefone',
+                      'Transporte',
+                      'Outros'
+                    ].map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (_) {},
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    decoration: InputDecoration(label: Text('Valor gasto: R\$'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: TextField(
+                    decoration: InputDecoration(label: Text('Data da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    keyboardType: TextInputType.datetime,
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      // Adicione sua lógica para lidar com a data selecionada aqui
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: ElevatedButton(
+                child: Text('Salvar'),
+                onPressed: () {
+                  print('Salvo');
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                  foregroundColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -267,8 +357,6 @@ class _TelaSaidasState extends State<TelaSaidas> {
                     ),
                   ],
                 ),
-                
-
                 Expanded(
                   child: ListView.builder(
                     itemCount: 10, // Número de cartões que você deseja exibir
@@ -278,20 +366,165 @@ class _TelaSaidasState extends State<TelaSaidas> {
                         child: ListTile(
                           title: Text('Título da Sáida'),
                           subtitle: Text('Categoria\nR\$ 0,00'),
-                          trailing: Icon(Icons.more_vert_outlined),
+                          //trailing: Icon(Icons.more_vert_outlined),
+                          trailing: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          GestureDetector(
+                                            child: Text(
+                                              'Editar',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            onTap: () {
+                                              print('Editar');
+                                              Navigator.of(context).pop();
+                                              _showEditDialog(
+                                                  context); // Fechar o diálogo
+                                              // Adicione sua ação de edição aqui
+                                            },
+                                          ),
+                                          Padding(padding: EdgeInsets.all(8.0)),
+                                          GestureDetector(
+                                            child: Text(
+                                              'Excluir',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              print('Excluir');
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    content:
+                                                        SingleChildScrollView(
+                                                      child: ListBody(
+                                                        children: <Widget>[
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        bottom:
+                                                                            15.0),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Tem certeza que deseja excluir?',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                    child: Text(
+                                                                        'Sim'),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(
+                                                                          48,
+                                                                          203,
+                                                                          128,
+                                                                          50),
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.zero),
+                                                                    ),
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                    child: Text(
+                                                                        'Não'),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(
+                                                                          48,
+                                                                          203,
+                                                                          128,
+                                                                          50),
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.zero),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ); // Fechar o diálogo
+                                              // Adicione sua ação de exclusão aqui
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              print('clicou');
+                            },
+                            icon: Icon(Icons.more_vert_outlined),
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
                 IconButton(
-                      onPressed:(){},
-                      icon: Icon(
-                        Icons.add_box_outlined,
-                        size: 80, color: Color.fromRGBO(48, 203, 128, 50),
-                      ),
-                    ),
-
+                  onPressed: () {
+                    _showEditDialog(context);
+                  },
+                  icon: Icon(
+                    Icons.add_box_outlined,
+                    size: 80,
+                    color: Color.fromRGBO(48, 203, 128, 50),
+                  ),
+                ),
               ],
             ),
           ),
