@@ -57,18 +57,27 @@ class _TelaSaidasState extends State<TelaSaidas> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: TextField(
-                    decoration: InputDecoration(label: Text('Título da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    decoration: InputDecoration(
+                      label: Text('Título da Saída:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: DropdownButtonFormField<String>(
                     //decoration: InputDecoration(labelText: 'Categoria da Saída'),
-                    decoration: InputDecoration(label: Text('Categoria da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    decoration: InputDecoration(
+                      label: Text('Categoria da Saída:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
                     items: <String>[
                       'Alimentação',
                       'Aluguel',
@@ -93,23 +102,33 @@ class _TelaSaidasState extends State<TelaSaidas> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: TextField(
-                    decoration: InputDecoration(label: Text('Valor gasto: R\$'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    decoration: InputDecoration(
+                      label: Text('Valor gasto: R\$'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: TextField(
-                    decoration: InputDecoration(label: Text('Data da Saída:'), border: OutlineInputBorder(borderRadius: BorderRadius.only(),),),
+                    decoration: InputDecoration(
+                      label: Text('Data da Saída:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
                     keyboardType: TextInputType.datetime,
                     onTap: () async {
-                      final DateTime? picked = await showDatePicker(
+                      final DateTime? selecionada = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2101),
                       );
-                      // Adicione sua lógica para lidar com a data selecionada aqui
+                      // Tentar trabalhar com esta data aqui
                     },
                   ),
                 ),
@@ -415,88 +434,56 @@ class _TelaSaidasState extends State<TelaSaidas> {
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        bottom:
-                                                                            15.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      'Tem certeza que deseja excluir?',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ],
-                                                                ),
+                                                              Text(
+                                                                'Tem certeza que deseja excluir?',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
                                                               ),
                                                               Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
                                                                 children: [
                                                                   ElevatedButton(
+                                                                    style: ElevatedButton.styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(48, 203, 128, 50), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                    ),
                                                                     onPressed:
                                                                         () {
                                                                           Navigator.of(context).pop();
                                                                         },
                                                                     child: Text(
                                                                         'Sim'),
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(
-                                                                          48,
-                                                                          203,
-                                                                          128,
-                                                                          50),
-                                                                      foregroundColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.zero),
-                                                                    ),
                                                                   ),
                                                                   ElevatedButton(
+                                                                    style: ElevatedButton.styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(48, 203, 128, 50), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                    ),
                                                                     onPressed:
                                                                         () {
                                                                           Navigator.of(context).pop();
                                                                         },
                                                                     child: Text(
                                                                         'Não'),
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(
-                                                                          48,
-                                                                          203,
-                                                                          128,
-                                                                          50),
-                                                                      foregroundColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.zero),
-                                                                    ),
+                                                                  
                                                                   ),
                                                                 ],
                                                               ),
                                                             ],
-                                                          )
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
                                                   );
                                                 },
                                               ); // Fechar o diálogo
-                                              // Adicione sua ação de exclusão aqui
+                                              // Ainda preciso tratar a exclusão aqui
                                             },
                                           ),
                                         ],
@@ -517,7 +504,9 @@ class _TelaSaidasState extends State<TelaSaidas> {
                 ),
                 IconButton(
                   onPressed: () {
+                    print('Cadastrar');
                     _showEditDialog(context);
+                    // _showEditDialog(context);
                   },
                   icon: Icon(
                     Icons.add_box_outlined,

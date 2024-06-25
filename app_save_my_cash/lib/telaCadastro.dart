@@ -26,6 +26,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 2.0, top: 100),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset('assets/images/user.png'),
                         Padding(

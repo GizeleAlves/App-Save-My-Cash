@@ -47,7 +47,215 @@ class _TelaEntradasState extends State<TelaEntradas> {
     });
   }
 
- 
+  void _showExcluirDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text(
+                    'Editar',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onTap: () {
+                    print('Editar');
+                    Navigator.of(context).pop();
+                    _showEditDialog(context); // Fechar o diálogo
+                    // Adicione sua ação de edição aqui
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: Text(
+                    'Excluir',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    print('Excluir');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Tem certeza que deseja excluir?',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromRGBO(
+                                                48, 203, 128, 50),
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.zero),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Sim'),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromRGBO(
+                                                48, 203, 128, 50),
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.zero),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Não'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ); // Fechar o diálogo
+                    // Ainda preciso tratar a exclusão aqui
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditDialog(BuildContext context, {bool isEditing = false}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      label: Text('Título da Entrada:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: DropdownButtonFormField<String>(
+                    //decoration: InputDecoration(labelText: 'Categoria da Saída'),
+                    decoration: InputDecoration(
+                      label: Text('Categoria da Entrada:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
+                    items: <String>[
+                      'Cashback',
+                      'Investimentos',
+                      'Recebimento de Dívidas',
+                      'Renda Extra',
+                      'Salário',
+                      'Outros',
+                    ].map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (_) {},
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      label: Text('Valor recebido: R\$'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      label: Text('Data da Entrada:'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(),
+                      ),
+                    ),
+                    keyboardType: TextInputType.datetime,
+                    onTap: () async {
+                      final DateTime? selecionada = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      print(selecionada);
+                      // Tentar trabalhar com esta data aqui
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: ElevatedButton(
+                child: Text('Salvar'),
+                onPressed: () {
+                  print('Salvo');
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                  foregroundColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -267,8 +475,6 @@ class _TelaEntradasState extends State<TelaEntradas> {
                     ),
                   ],
                 ),
-                
-
                 Expanded(
                   child: ListView.builder(
                     itemCount: 10, // Número de cartões que você deseja exibir
@@ -278,19 +484,27 @@ class _TelaEntradasState extends State<TelaEntradas> {
                         child: ListTile(
                           title: Text('Título da Entrada'),
                           subtitle: Text('Categoria\nR\$ 0,00'),
-                          trailing: Icon(Icons.more_vert_outlined),
+                          trailing: GestureDetector(
+                            child: Icon(Icons.more_vert_outlined),
+                            onTap: () {
+                              _showExcluirDialog(context);
+                            },
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
                 IconButton(
-                      onPressed:(){},
-                      icon: Icon(
-                        Icons.add_box_outlined,
-                        size: 80, color: Color.fromRGBO(48, 203, 128, 50),
-                      ),
-                    ),
+                  onPressed: () {
+                    _showEditDialog(context);
+                  },
+                  icon: Icon(
+                    Icons.add_box_outlined,
+                    size: 80,
+                    color: Color.fromRGBO(48, 203, 128, 50),
+                  ),
+                ),
               ],
             ),
           ),
