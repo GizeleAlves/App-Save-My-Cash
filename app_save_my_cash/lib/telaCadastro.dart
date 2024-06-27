@@ -18,6 +18,8 @@ class _TelaCadastroState extends State<TelaCadastro> {
   final senhaController = TextEditingController();
   final senhaConfirmacaoController = TextEditingController();
 
+  final User? user = supabase.auth.currentUser;
+
   void showMessage(BuildContext context, String message) {
     showDialog(
       context: context,
@@ -51,6 +53,16 @@ class _TelaCadastroState extends State<TelaCadastro> {
     );
   }
 
+  Future<void> cadastrarUsuario() async {
+    user?.id; // retorna o id do usuário logado
+    await supabase.from('tabelausuarios').insert({
+      'id': user?.id,
+      'nome': nomeController.text,
+      'email': emailController.text,
+      'senha': senhaController.text,
+    });
+  }
+
   Future<void> fazerCadastro() async {
     if (nomeController.text.isEmpty) {
       showMessage(context, 'Insira um nome válido!');
@@ -72,6 +84,12 @@ class _TelaCadastroState extends State<TelaCadastro> {
           context,
           MaterialPageRoute(builder: (context) => TelaInicial()),
         );
+
+        try {
+          cadastrarUsuario();
+        } catch (e) {
+          print('Erro: ${e}');
+        }
       } catch (e) {
         print('Erro: ${e}');
         showMessage(context, "Erro: ${e}");
