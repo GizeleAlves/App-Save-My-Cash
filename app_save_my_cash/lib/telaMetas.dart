@@ -386,8 +386,9 @@ class _TelaMetasState extends State<TelaMetas> {
                   'Sair',
                   style: TextStyle(fontSize: 22),
                 ),
-                onTap: () {
+                onTap: () async {
                   print('Sair');
+                  await supabase.auth.signOut();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => TelaLogin()),

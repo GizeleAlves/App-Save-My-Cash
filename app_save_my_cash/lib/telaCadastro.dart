@@ -1,6 +1,9 @@
 import 'package:app_save_my_cash/telaInicial.dart';
 import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final supabase = Supabase.instance.client;
 
 class TelaCadastro extends StatefulWidget {
   const TelaCadastro({super.key});
@@ -10,6 +13,33 @@ class TelaCadastro extends StatefulWidget {
 }
 
 class _TelaCadastroState extends State<TelaCadastro> {
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
+  final senhaConfirmacaoController = TextEditingController();
+
+  void showMessage(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(message),
+          actions: <Widget>[
+            Center(
+              child: TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,10 +61,15 @@ class _TelaCadastroState extends State<TelaCadastro> {
                         Image.asset('assets/images/user.png'),
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0, bottom: 20),
-                          child: Text('Cadastre-se:', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), textAlign: TextAlign.start,),
+                          child: Text(
+                            'Cadastre-se:',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.start,
+                          ),
                         ),
                       ],
-                    ), 
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
@@ -50,6 +85,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         label: Text('Email'),
                         border: OutlineInputBorder(
@@ -61,6 +97,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: TextField(
+                      controller: senhaController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Senha',
@@ -73,6 +110,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: TextField(
+                      controller: senhaConfirmacaoController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Confirmar Senha',
@@ -85,11 +123,31 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TelaInicial()),
-                        );
+                      onPressed: () async {
+                        //final authResponse = await supabase.auth.signUp(
+                        // password: senhaController.text,
+                        //email: emailController.text);
+
+                        try {
+                          final authResponse = await supabase.auth.signUp(
+                              password: senhaController.text,
+                              email: emailController.text);
+
+                           showMessage(context,
+                             '${authResponse.user!.email} cadastrado com sucesso!');
+                          
+                          await Future.delayed(Duration(seconds: 2));
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TelaInicial()),
+                          );
+                        } catch (e) {
+                          print("DEU ERRO: ${e}");
+                          showMessage(context, 'Erro: ${e}');
+                          
+                        }
                       },
                       child: Text(
                         'Cadastrar',
@@ -98,7 +156,8 @@ class _TelaCadastroState extends State<TelaCadastro> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromRGBO(48, 203, 128, 50),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
                       ),
                     ),
                   ),

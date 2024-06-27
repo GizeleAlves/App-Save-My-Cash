@@ -1,7 +1,5 @@
 import 'package:app_save_my_cash/telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaLogin.dart';
-import 'telaCadastro.dart';
 import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
 import 'telaMetas.dart';
@@ -122,8 +120,9 @@ class _TelaInicialState extends State<TelaInicial> {
                   color: Colors.black, size: 40,
                 ),
                 title: Text('Sair', style: TextStyle(fontSize: 22),),
-                onTap: () {
+                onTap: () async {
                   print('Sair');
+                  await supabase.auth.signOut();
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => TelaLogin()),

@@ -141,7 +141,8 @@ class _TelaPerfilState extends State<TelaPerfil> {
                   'Sair',
                   style: TextStyle(fontSize: 22),
                 ),
-                onTap: () {
+                onTap: () async {
+                  await supabase.auth.signOut();
                   print('Sair');
                   Navigator.push(
                     context,

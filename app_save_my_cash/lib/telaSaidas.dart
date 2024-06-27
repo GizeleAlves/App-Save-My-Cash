@@ -284,7 +284,8 @@ class _TelaSaidasState extends State<TelaSaidas> {
                   'Sair',
                   style: TextStyle(fontSize: 22),
                 ),
-                onTap: () {
+                onTap: () async {
+                  await supabase.auth.signOut();
                   print('Sair');
                   Navigator.push(
                     context,
