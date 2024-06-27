@@ -13,6 +13,7 @@ class TelaCadastro extends StatefulWidget {
 }
 
 class _TelaCadastroState extends State<TelaCadastro> {
+  final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
   final senhaConfirmacaoController = TextEditingController();
@@ -22,11 +23,23 @@ class _TelaCadastroState extends State<TelaCadastro> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(message),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 20),
+          ),
           actions: <Widget>[
             Center(
-              child: TextButton(
-                child: Text("OK"),
+              child: ElevatedButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(fontSize: 18),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                  foregroundColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -38,7 +51,33 @@ class _TelaCadastroState extends State<TelaCadastro> {
     );
   }
 
+  Future<void> fazerCadastro() async {
+    if (nomeController.text.isEmpty) {
+      showMessage(context, 'Insira um nome válido!');
+    } else if (emailController.text.isEmpty) {
+      showMessage(context, 'Insira um e-mail válido!');
+    } else if (senhaController.text.isEmpty) {
+      showMessage(context, 'Insira uma senha válida!');
+    } else if (senhaController.text != senhaConfirmacaoController.text) {
+      showMessage(context, 'As senhas não conferem!');
+    } else {
+      try {
+        final authResponse = await supabase.auth.signUp(
+            password: senhaController.text, email: emailController.text);
 
+        showMessage(context, "Login realizado com sucesso!");
+        print('Login realizado com sucesso! ${authResponse}');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TelaInicial()),
+        );
+      } catch (e) {
+        print('Erro: ${e}');
+        showMessage(context, "Erro: ${e}");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +113,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: TextField(
+                      controller: nomeController,
                       decoration: InputDecoration(
                         label: Text('Nome'),
                         border: OutlineInputBorder(
@@ -127,27 +167,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
                         //final authResponse = await supabase.auth.signUp(
                         // password: senhaController.text,
                         //email: emailController.text);
-
-                        try {
-                          final authResponse = await supabase.auth.signUp(
-                              password: senhaController.text,
-                              email: emailController.text);
-
-                           showMessage(context,
-                             '${authResponse.user!.email} cadastrado com sucesso!');
-                          
-                          await Future.delayed(Duration(seconds: 2));
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TelaInicial()),
-                          );
-                        } catch (e) {
-                          print("DEU ERRO: ${e}");
-                          showMessage(context, 'Erro: ${e}');
-                          
-                        }
+                        fazerCadastro();
                       },
                       child: Text(
                         'Cadastrar',
