@@ -15,17 +15,24 @@ class TelaLogin extends StatefulWidget {
 class _TelaLoginState extends State<TelaLogin> {
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
+  final User? user = supabase.auth.currentUser;
 
   void showMessage(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(message, style: TextStyle(fontSize: 20),),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 20),
+          ),
           actions: <Widget>[
             Center(
               child: ElevatedButton(
-                child: Text("OK", style: TextStyle(fontSize: 18),),
+                child: Text(
+                  "OK",
+                  style: TextStyle(fontSize: 18),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(48, 203, 128, 50),
                   foregroundColor: Colors.white,

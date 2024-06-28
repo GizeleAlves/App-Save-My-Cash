@@ -16,6 +16,8 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+  final User? user = supabase.auth.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

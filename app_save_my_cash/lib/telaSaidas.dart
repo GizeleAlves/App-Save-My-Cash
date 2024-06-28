@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'telaLogin.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,70 @@ class TelaSaidas extends StatefulWidget {
 
 class _TelaSaidasState extends State<TelaSaidas> {
   DateTime _selectedDate = DateTime.now();
+  final tituloController = TextEditingController();
+  String? categoriaController;
+  final valorController = TextEditingController();
+  final dataController = TextEditingController();
+  final User? user = supabase.auth.currentUser;
+
+  Future<void> addSaida() async {
+    await supabase.from('saidas').insert({
+      'tituloSaida': tituloController.text,
+      'categoriaSaida': categoriaController,
+      'valorSaida': double.parse(valorController.text),
+      'dataSaida': dataController.text,
+      'idUsuario': user?.id,
+    });
+    showMessage(context, 'Saída cadastrada com sucesso!');
+  }
+
+  void showMessage(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 20),
+          ),
+          actions: <Widget>[
+            Center(
+              child: ElevatedButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(fontSize: 18),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                  foregroundColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _selecionaDate(BuildContext context) async {
+    final DateTime? selecionada = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (selecionada != null && selecionada != _selectedDate) {
+      setState(() {
+        _selectedDate = selecionada;
+        dataController.text = _formatDate(_selectedDate);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -49,7 +114,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
     });
   }
 
-  void _showEditDialog(BuildContext context, {bool isEditing = false}) {
+  void _showEditDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -60,6 +125,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: TextField(
+                    controller: tituloController,
                     decoration: InputDecoration(
                       label: Text('Título da Saída:'),
                       border: OutlineInputBorder(
@@ -78,6 +144,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                         borderRadius: BorderRadius.only(),
                       ),
                     ),
+                    value: categoriaController,
                     items: <String>[
                       'Alimentação',
                       'Aluguel',
@@ -96,12 +163,17 @@ class _TelaSaidasState extends State<TelaSaidas> {
                         child: new Text(value),
                       );
                     }).toList(),
-                    onChanged: (_) {},
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        categoriaController = newValue;
+                      });
+                    },
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: TextField(
+                    controller: valorController,
                     decoration: InputDecoration(
                       label: Text('Valor gasto: R\$'),
                       border: OutlineInputBorder(
@@ -114,6 +186,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: TextField(
+                    controller: dataController,
                     decoration: InputDecoration(
                       label: Text('Data da Saída:'),
                       border: OutlineInputBorder(
@@ -122,13 +195,14 @@ class _TelaSaidasState extends State<TelaSaidas> {
                     ),
                     keyboardType: TextInputType.datetime,
                     onTap: () async {
-                      final DateTime? selecionada = await showDatePicker(
+                      /*final DateTime? selecionada = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2101),
-                      );
-                      // Tentar trabalhar com esta data aqui
+                      );*/
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      await _selecionaDate(context);
                     },
                   ),
                 ),
@@ -140,7 +214,11 @@ class _TelaSaidasState extends State<TelaSaidas> {
               child: ElevatedButton(
                 child: Text('Salvar'),
                 onPressed: () {
-                  print('Salvo');
+                  try {
+                    addSaida();
+                  } catch (e) {
+                    showMessage(context, 'ERRO: ${e}');
+                  }
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -448,31 +526,60 @@ class _TelaSaidasState extends State<TelaSaidas> {
                                                                 height: 20,
                                                               ),
                                                               Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
                                                                 children: [
                                                                   ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(48, 203, 128, 50), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(
+                                                                          48,
+                                                                          203,
+                                                                          128,
+                                                                          50),
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.zero),
                                                                     ),
                                                                     onPressed:
                                                                         () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
                                                                     child: Text(
                                                                         'Sim'),
                                                                   ),
                                                                   ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(48, 203, 128, 50), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor: Color.fromRGBO(
+                                                                          48,
+                                                                          203,
+                                                                          128,
+                                                                          50),
+                                                                      foregroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.zero),
                                                                     ),
                                                                     onPressed:
                                                                         () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
                                                                     child: Text(
                                                                         'Não'),
-                                                                  
                                                                   ),
                                                                 ],
                                                               ),
