@@ -305,6 +305,9 @@ class _TelaSaidasState extends State<TelaSaidas> {
   
 
   void _showAddDialog(BuildContext context) {
+    tituloController.clear();
+    valorController.clear();
+    categoriaController = null;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -645,7 +648,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                 ),
                 Expanded(
                   child: listaSaidas.isEmpty
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: Column(children: [CircularProgressIndicator(),SizedBox(height: 20,), Text('Não encontramos nenhuma saída cadastrada ainda...')] ))
                       : ListView.builder(
                           itemCount: listaSaidas.length,
                           itemBuilder: (context, index) {
@@ -812,7 +815,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                   onPressed: () {
                     print('Cadastrar');
                     _showAddDialog(context);
-                    // _showEditDialog(context);
+                    
                   },
                   icon: Icon(
                     Icons.add_box_outlined,
