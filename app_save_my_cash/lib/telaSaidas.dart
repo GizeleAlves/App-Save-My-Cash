@@ -24,16 +24,87 @@ class _TelaSaidasState extends State<TelaSaidas> {
   final valorController = TextEditingController();
   final dataController = TextEditingController();
   final User? user = supabase.auth.currentUser;
+  List<Map<String, dynamic>> listaSaidas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    buscarSaidas(); // fetchSaidas é chamada aqui
+  }
+
+  Future<void> deleteSaida(String idSaida) async {
+    try {
+      await supabase.from('saidas').delete().eq('idSaida', idSaida);
+      buscarSaidas();
+      showMessage(context, 'Saída excluída com sucesso!');
+    } catch (e) {
+      showMessage(context, 'Erro ao excluir a saída: ${e}');
+    }
+  }
+
+  Future<void> atualizarSaida(String idSaida, String titulo, String categoria,
+      double valor, String data) async {
+    try {
+      await supabase.from('saidas').update({
+        'tituloSaida': titulo,
+        'categoriaSaida': categoria,
+        'valorSaida': valor,
+        'dataSaida': data,
+      }).eq('idSaida', idSaida);
+      showMessage(context, "Saída atualizada com sucesso!");
+      buscarSaidas();
+    } catch (e) {
+      showMessage(context, 'Erro ao atualizar: ${e}');
+    }
+  }
+
+  Future<void> buscarSaidas() async {
+    try {
+      final dados =
+          await supabase.from('saidas').select().eq('idUsuario', user!.id);
+      setState(() {
+        listaSaidas = dados as List<Map<String, dynamic>>;
+      });
+    } catch (e) {
+      showMessage(context, "Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarSaidasData(String data) async {
+    try {
+      final dados = await supabase
+          .from('saidas')
+          .select()
+          .eq('idUsuario', user!.id)
+          .eq('dataSaida', data);
+      setState(() {
+        listaSaidas = dados as List<Map<String, dynamic>>;
+      });
+    } catch (e) {
+      showMessage(context, "Erro ao carregar os dados: ${e}");
+    }
+  }
 
   Future<void> addSaida() async {
-    await supabase.from('saidas').insert({
-      'tituloSaida': tituloController.text,
-      'categoriaSaida': categoriaController,
-      'valorSaida': double.parse(valorController.text),
-      'dataSaida': dataController.text,
-      'idUsuario': user?.id,
-    });
-    showMessage(context, 'Saída cadastrada com sucesso!');
+    if (tituloController.text.isEmpty) {
+      showMessage(context, 'Insira um título!');
+    } else if (categoriaController!.isEmpty) {
+      showMessage(context, 'Insira uma categoria!');
+    } else if (valorController.text.isEmpty) {
+      showMessage(context, 'Informe um valor para a saída!');
+    } else if (dataController.text.isEmpty) {
+      showMessage(context, 'Informe uma data para a saída!');
+    } else {
+      await supabase.from('saidas').insert({
+        'tituloSaida': tituloController.text,
+        'categoriaSaida': categoriaController,
+        'valorSaida': double.parse(valorController.text),
+        'dataSaida': dataController.text,
+        'idUsuario': user?.id,
+      });
+      buscarSaidas();
+      showMessage(context, 'Saída cadastrada com sucesso!');
+    }
   }
 
   void showMessage(BuildContext context, String message) {
@@ -96,6 +167,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
         _selectedDate = picked;
       });
     }
+    buscarSaidasData(_formatDate(_selectedDate) as String);
   }
 
   String _formatDate(DateTime date) {
@@ -114,7 +186,125 @@ class _TelaSaidasState extends State<TelaSaidas> {
     });
   }
 
-  void _showEditDialog(BuildContext context) {
+  void _showEditDialog(BuildContext context, Map<String, dynamic> saida) {
+    tituloController.text = saida['tituloSaida'];
+    categoriaController = saida['categoriaSaida'];
+    valorController.text = saida['valorSaida'].toString();
+    dataController.text = saida['dataSaida'];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Editar Saída"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    controller: tituloController,
+                    decoration: InputDecoration(
+                      label: Text('Título da Saída:'),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.only()),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      label: Text('Categoria da Saída:'),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.only()),
+                    ),
+                    value: categoriaController,
+                    items: <String>[
+                      'Alimentação',
+                      'Aluguel',
+                      'Beleza',
+                      'Conta de água',
+                      'Conta de luz',
+                      'Estudos',
+                      'Internet',
+                      'Saúde',
+                      'Telefone',
+                      'Transporte',
+                      'Outros'
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        categoriaController = newValue;
+                      });
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextField(
+                    controller: valorController,
+                    decoration: InputDecoration(
+                      label: Text('Valor gasto: R\$'),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.only()),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: TextField(
+                    controller: dataController,
+                    decoration: InputDecoration(
+                      label: Text('Data da Saída:'),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.only()),
+                    ),
+                    keyboardType: TextInputType.datetime,
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      await _selectDate(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: ElevatedButton(
+                child: Text('Salvar'),
+                onPressed: () {
+                  atualizarSaida(
+                      saida['idSaida'],
+                      tituloController.text,
+                      categoriaController!,
+                      double.parse(valorController.text),
+                      dataController.text);
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(48, 203, 128, 50),
+                  foregroundColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
+
+  void _showAddDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -404,31 +594,23 @@ class _TelaSaidasState extends State<TelaSaidas> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          print(listaSaidas);
+                          buscarSaidasData(
+                              _formatDate(_selectedDate) as String);
+                        },
                         child: Text(
-                          'Dia',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
+                          'Visualizar por Data',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          buscarSaidas();
+                        },
                         child: Text(
-                          'Mês',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Ano',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Período',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
+                          'Visualizar Tudo',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
                         ),
                       ),
                     ]),
@@ -436,7 +618,10 @@ class _TelaSaidasState extends State<TelaSaidas> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      onPressed: _decrementDate,
+                      onPressed: () {
+                        _decrementDate();
+                        buscarSaidasData(_formatDate(_selectedDate) as String);
+                      },
                       icon: Icon(
                         Icons.arrow_left_outlined,
                         size: 50,
@@ -447,7 +632,10 @@ class _TelaSaidasState extends State<TelaSaidas> {
                       style: TextStyle(fontSize: 22),
                     ),
                     IconButton(
-                      onPressed: _incrementDate,
+                      onPressed: () {
+                        _incrementDate();
+                        buscarSaidasData(_formatDate(_selectedDate) as String);
+                      },
                       icon: Icon(
                         Icons.arrow_right_outlined,
                         size: 50,
@@ -456,164 +644,174 @@ class _TelaSaidasState extends State<TelaSaidas> {
                   ],
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 10, // Número de cartões que você deseja exibir
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          title: Text('Título da Sáida'),
-                          subtitle: Text('Categoria\nR\$ 0,00'),
-                          //trailing: Icon(Icons.more_vert_outlined),
-                          trailing: IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          GestureDetector(
-                                            child: Text(
-                                              'Editar',
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            onTap: () {
-                                              print('Editar');
-                                              Navigator.of(context).pop();
-                                              _showEditDialog(
-                                                  context); // Fechar o diálogo
-                                              // Adicione sua ação de edição aqui
-                                            },
-                                          ),
-                                          Padding(padding: EdgeInsets.all(8.0)),
-                                          GestureDetector(
-                                            child: Text(
-                                              'Excluir',
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                              print('Excluir');
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    content:
-                                                        SingleChildScrollView(
-                                                      child: ListBody(
-                                                        children: <Widget>[
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                'Tem certeza que deseja excluir?',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 20,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  ElevatedButton(
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(
-                                                                          48,
-                                                                          203,
-                                                                          128,
-                                                                          50),
-                                                                      foregroundColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.zero),
+                  child: listaSaidas.isEmpty
+                      ? Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: listaSaidas.length,
+                          itemBuilder: (context, index) {
+                            final saida = listaSaidas[index];
+                            return Card(
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              child: ListTile(
+                                title: Text(saida['tituloSaida']),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'Categoria: ${saida['categoriaSaida']}'),
+                                    Text('R\$: ${saida['valorSaida']}')
+                                  ],
+                                ),
+                                //trailing: Icon(Icons.more_vert_outlined),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                GestureDetector(
+                                                  child: Text(
+                                                    'Editar',
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  onTap: () {
+                                                    print('Editar');
+                                                    Navigator.of(context).pop();
+                                                    _showEditDialog(
+                                                        context, saida);
+                                                    
+                                                    
+                                                  },
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0)),
+                                                GestureDetector(
+                                                  child: Text(
+                                                    'Excluir',
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                    print('Excluir');
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: ListBody(
+                                                              children: <Widget>[
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Tem certeza que deseja excluir?',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
                                                                     ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    child: Text(
-                                                                        'Sim'),
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      backgroundColor: Color.fromRGBO(
-                                                                          48,
-                                                                          203,
-                                                                          128,
-                                                                          50),
-                                                                      foregroundColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.zero),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          20,
                                                                     ),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    child: Text(
-                                                                        'Não'),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceAround,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        ElevatedButton(
+                                                                          style:
+                                                                              ElevatedButton.styleFrom(
+                                                                            backgroundColor: Color.fromRGBO(
+                                                                                48,
+                                                                                203,
+                                                                                128,
+                                                                                50),
+                                                                            foregroundColor:
+                                                                                Colors.white,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            deleteSaida(saida['idSaida']);
+                                                                            buscarSaidas();
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          child:
+                                                                              Text('Sim'),
+                                                                        ),
+                                                                        ElevatedButton(
+                                                                          style:
+                                                                              ElevatedButton.styleFrom(
+                                                                            backgroundColor: Color.fromRGBO(
+                                                                                48,
+                                                                                203,
+                                                                                128,
+                                                                                50),
+                                                                            foregroundColor:
+                                                                                Colors.white,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          child:
+                                                                              Text('Não'),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ); // Fechar o diálogo
-                                              // Ainda preciso tratar a exclusão aqui
-                                            },
+                                                        );
+                                                      },
+                                                    ); // Fechar o diálogo
+                                                    // Ainda preciso tratar a exclusão aqui
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
+                                        );
+                                      },
+                                    );
 
-                              print('clicou');
-                            },
-                            icon: Icon(Icons.more_vert_outlined),
-                          ),
+                                    print('clicou');
+                                  },
+                                  icon: Icon(Icons.more_vert_outlined),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
                 IconButton(
                   onPressed: () {
                     print('Cadastrar');
-                    _showEditDialog(context);
+                    _showAddDialog(context);
                     // _showEditDialog(context);
                   },
                   icon: Icon(
