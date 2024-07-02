@@ -1,9 +1,7 @@
 import 'telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
 import 'telaMetas.dart';
-import 'telaPerfil.dart';
 import 'telaSaidas.dart';
 import 'package:intl/intl.dart';
 
@@ -124,43 +122,6 @@ class _TelaResumoState extends State<TelaResumo> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => TelaMetas()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.settings,
-                  color: Colors.grey,
-                  size: 40,
-                ),
-                title: Text(
-                  'Configurações',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Configurações');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TelaConfiguracoes()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.account_circle_outlined,
-                  color: Colors.purple,
-                  size: 40,
-                ),
-                title: Text(
-                  'Perfil',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Perfil');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TelaPerfil()),
                   );
                 },
               ),

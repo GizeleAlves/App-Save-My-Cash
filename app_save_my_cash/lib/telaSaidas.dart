@@ -4,10 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'telaLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'telaConfiguracoes.dart';
 import 'telaEntradas.dart';
 import 'telaMetas.dart';
-import 'telaPerfil.dart';
 import 'telaResumo.dart';
 
 class TelaSaidas extends StatefulWidget {
@@ -510,43 +508,6 @@ class _TelaSaidasState extends State<TelaSaidas> {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.settings,
-                  color: Colors.grey,
-                  size: 40,
-                ),
-                title: Text(
-                  'Configurações',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Configurações');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TelaConfiguracoes()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.account_circle_outlined,
-                  color: Colors.purple,
-                  size: 40,
-                ),
-                title: Text(
-                  'Perfil',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Perfil');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TelaPerfil()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
                   Icons.output_outlined,
                   color: Colors.black,
                   size: 40,
@@ -631,7 +592,7 @@ class _TelaSaidasState extends State<TelaSaidas> {
                       ),
                     ),
                     Text(
-                      '${_formatDate(_selectedDate!)}',
+                      '${_formatDate(_selectedDate)}',
                       style: TextStyle(fontSize: 22),
                     ),
                     IconButton(

@@ -1,8 +1,6 @@
 import 'telaLogin.dart';
 import 'package:flutter/material.dart';
-import 'telaConfiguracoes.dart';
 import 'telaMetas.dart';
-import 'telaPerfil.dart';
 import 'telaResumo.dart';
 import 'telaSaidas.dart';
 import 'package:intl/intl.dart';
@@ -333,6 +331,7 @@ class _TelaEntradasState extends State<TelaEntradas> {
                     ),
                     value: categoriaController,
                     items: <String>[
+                      'Cahsback'
                       'Investimentos',
                       'Recebimento Dívidas',
                       'Renda Extra',
@@ -376,12 +375,7 @@ class _TelaEntradasState extends State<TelaEntradas> {
                     ),
                     keyboardType: TextInputType.datetime,
                     onTap: () async {
-                      /*final DateTime? selecionada = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2101),
-                      );*/
+        
                       FocusScope.of(context).requestFocus(new FocusNode());
                       await _selecionaDate(context);
                     },
@@ -498,43 +492,6 @@ class _TelaEntradasState extends State<TelaEntradas> {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.settings,
-                  color: Colors.grey,
-                  size: 40,
-                ),
-                title: Text(
-                  'Configurações',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Configurações');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TelaConfiguracoes()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.account_circle_outlined,
-                  color: Colors.purple,
-                  size: 40,
-                ),
-                title: Text(
-                  'Perfil',
-                  style: TextStyle(fontSize: 22),
-                ),
-                onTap: () {
-                  print('Perfil');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TelaPerfil()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
                   Icons.output_outlined,
                   color: Colors.black,
                   size: 40,
@@ -620,7 +577,7 @@ class _TelaEntradasState extends State<TelaEntradas> {
                       ),
                     ),
                     Text(
-                      '${_formatDate(_selectedDate!)}',
+                      '${_formatDate(_selectedDate)}',
                       style: TextStyle(fontSize: 22),
                     ),
                     IconButton(
