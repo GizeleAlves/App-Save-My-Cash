@@ -53,7 +53,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
     );
   }
 
-  Future<void> cadastrarUsuario() async {
+  /*Future<void> cadastrarUsuario() async {
     user?.id; // retorna o id do usuário logado
     await supabase.from('tabelausuarios').insert({
       'id': user?.id,
@@ -61,7 +61,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
       'email': emailController.text,
       'senha': senhaController.text,
     });
-  }
+  }*/
 
   Future<void> fazerCadastro() async {
     if (nomeController.text.isEmpty) {
@@ -85,11 +85,11 @@ class _TelaCadastroState extends State<TelaCadastro> {
           MaterialPageRoute(builder: (context) => TelaInicial()),
         );
 
-        try {
+        /*try {
           cadastrarUsuario();
         } catch (e) {
           print('Erro: ${e}');
-        }
+        }*/
       } catch (e) {
         print('Erro: ${e}');
         showMessage(context, "Erro: ${e}");

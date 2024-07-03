@@ -4,6 +4,7 @@ import 'telaEntradas.dart';
 import 'telaMetas.dart';
 import 'telaSaidas.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TelaResumo extends StatefulWidget {
   const TelaResumo({super.key});
@@ -14,6 +15,154 @@ class TelaResumo extends StatefulWidget {
 
 class _TelaResumoState extends State<TelaResumo> {
   DateTime _selectedDate = DateTime.now();
+  final User? user = supabase.auth.currentUser;
+  List<Map<String, dynamic>> listaSaidas = [];
+  List<Map<String, dynamic>> listaEntradas = [];
+  List<Map<String, dynamic>> listaMetas = [];
+  double totalSaidas = 0.0;
+  double totalMetas = 0.0;
+  double totalEntradas = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    buscarSaidas();
+    buscarEntradas();
+    buscarMetas(); // fetchSaidas é chamada aqui
+  }
+
+  Future<void> buscarSaidasData(String data) async {
+    try {
+      final dados = await supabase
+          .from('saidas')
+          .select()
+          .eq('idUsuario', user!.id)
+          .eq('dataSaida', data);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorSaida'] != null && saida['valorSaida'] is double) {
+            soma += saida['valorSaida'];
+          }
+        }
+        totalSaidas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarSaidas() async {
+    try {
+      final dados =
+          await supabase.from('saidas').select().eq('idUsuario', user!.id);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorSaida'] != null && saida['valorSaida'] is double) {
+            soma += saida['valorSaida'];
+          }
+        }
+        totalSaidas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarEntradas() async {
+    try {
+      final dados =
+          await supabase.from('entradas').select().eq('idUsuario', user!.id);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorEntrada'] != null &&
+              saida['valorEntrada'] is double) {
+            soma += saida['valorEntrada'];
+          }
+        }
+        totalEntradas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarEntradasData(String data) async {
+    try {
+      final dados = await supabase
+          .from('entradas')
+          .select()
+          .eq('idUsuario', user!.id)
+          .eq('dataEntrada', data);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorEntrada'] != null &&
+              saida['valorEntrada'] is double) {
+            soma += saida['valorEntrada'];
+          }
+        }
+        totalEntradas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarMetas() async {
+    try {
+      final dados =
+          await supabase.from('metas').select().eq('idUsuario', user!.id);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorGuardado'] != null &&
+              saida['valorGuardado'] is double) {
+            soma += saida['valorGuardado'];
+          }
+        }
+        totalMetas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
+
+  Future<void> buscarMetasData(String data) async {
+    try {
+      final dados = await supabase
+          .from('metas')
+          .select()
+          .eq('idUsuario', user!.id)
+          .eq('dataDeposito', data);
+      double soma = 0.0;
+
+      setState(() {
+        listaSaidas = List<Map<String, dynamic>>.from(dados);
+        for (var saida in listaSaidas) {
+          if (saida['valorGuardado'] != null &&
+              saida['valorGuardado'] is double) {
+            soma += saida['valorGuardado'];
+          }
+        }
+        totalMetas = soma;
+      });
+    } catch (e) {
+      print("Erro ao carregar os dados: ${e}");
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -27,6 +176,9 @@ class _TelaResumoState extends State<TelaResumo> {
         _selectedDate = picked;
       });
     }
+    buscarMetasData(_formatDate(_selectedDate));
+    buscarEntradasData(_formatDate(_selectedDate));
+    buscarSaidasData(_formatDate(_selectedDate));
   }
 
   String _formatDate(DateTime date) {
@@ -179,71 +331,142 @@ class _TelaResumoState extends State<TelaResumo> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Dia',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        )),
+                        onPressed: () {
+                          buscarSaidasData(_formatDate(_selectedDate));
+                          buscarEntradasData(_formatDate(_selectedDate));
+                          buscarMetasData(_formatDate(_selectedDate));
+                          print('Saídas: R\$ ${totalSaidas}');
+                          print('Entradas: R\$ ${totalEntradas}');
+                          print('Metas R\$: ${totalMetas}');
+                        },
+                        child: Text('Vizualizar por Data',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black))),
                     TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Mês',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        )),
-                    TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Ano',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        )),
-                    TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Período',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        )),
+                        onPressed: () {
+                          buscarSaidas();
+                          buscarEntradas();
+                          buscarMetas();
+                          print('Saídas: R\$ ${totalSaidas}');
+                          print('Entradas: R\$ ${totalEntradas}');
+                          print('Metas R\$: ${totalMetas}');
+                        },
+                        child: Text('Vizualizar Tudo',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black))),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      onPressed: _decrementDate,
-                      icon: Icon(Icons.arrow_left_outlined, size:50 ,),
+                      onPressed: () {
+                        print('Diminui data');
+                        _decrementDate();
+                        buscarMetasData(_formatDate(_selectedDate));
+                        buscarEntradasData(_formatDate(_selectedDate));
+                        buscarSaidasData(_formatDate(_selectedDate));
+                      },
+                      icon: Icon(
+                        Icons.arrow_left_outlined,
+                        size: 50,
+                      ),
                     ),
                     Text(
                       '${_formatDate(_selectedDate!)}',
                       style: TextStyle(fontSize: 22),
                     ),
                     IconButton(
-                      onPressed: _incrementDate,
-                      icon: Icon(Icons.arrow_right_outlined, size: 50,),
+                      onPressed: () {
+                        print('Aumenta Data');
+                        _incrementDate();
+                        buscarMetasData(_formatDate(_selectedDate));
+                        buscarEntradasData(_formatDate(_selectedDate));
+                        buscarSaidasData(_formatDate(_selectedDate));
+                      },
+                      icon: Icon(
+                        Icons.arrow_right_outlined,
+                        size: 50,
+                      ),
                     ),
                   ],
                 ),
-                Container(
+                /*Container(
                   height: 170,
                   color: Colors.grey[200],
                   margin: EdgeInsets.symmetric(vertical: 16.0),
                   child: Center(child: Text('Gerando gráfico...')),
-                ),
+                ),*/
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 10, // Número de cartões que você deseja exibir
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          leading: Icon(Icons.attach_money),
-                          title: Text('Título da transação'),
-                          subtitle: Text('Categoria\nR\$ 0,00'),
-                          trailing: Icon(Icons.arrow_forward_ios),
+                  child: listaSaidas.isEmpty &&
+                          listaEntradas.isEmpty &&
+                          listaMetas.isEmpty
+                      ? Center(
+                          child: Column(children: [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                              'Não encontramos nenhuma movimentação cadastrada ainda...')
+                        ]))
+                      : Column(
+                          children: [
+                            Card(
+                              child: ListTile(
+                                title: Text('Total de Entradas:'),
+                                subtitle: Text('R\$: ${totalEntradas}'),
+                                leading: Icon(Icons.bar_chart_outlined),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.arrow_forward_ios_outlined),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TelaEntradas()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: ListTile(
+                                title: Text('Total de Saidas:'),
+                                subtitle: Text('R\$: ${totalSaidas}'),
+                                leading: Icon(Icons.bar_chart_outlined),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.arrow_forward_ios_outlined),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TelaSaidas()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: ListTile(
+                                title: Text('Total de Economia (metas):'),
+                                subtitle: Text('R\$: ${totalMetas}'),
+                                leading: Icon(Icons.bar_chart_outlined),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.arrow_forward_ios_outlined),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TelaMetas()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
                 ),
-                ElevatedButton(
+                /*ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                      backgroundColor: Color.fromRGBO(48, 203, 128, 50),
@@ -258,7 +481,7 @@ class _TelaResumoState extends State<TelaResumo> {
                       Text('Gerar relatório'),
                     ],
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
